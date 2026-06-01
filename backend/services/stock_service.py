@@ -1,7 +1,7 @@
 import os 
 from dotenv import load_dotenv
 from alpaca.data.historical import StockHistoricalDataClient
-from alpaca.data.requests import StockLatestQuoteRequest
+from alpaca.data.requests import StockSnapshotRequest
 
 load_dotenv()
 
@@ -13,19 +13,25 @@ client = StockHistoricalDataClient(
 TICKERS = ["AAPL", "TSLA", "MSFT", "GOOGL", "AMZN"]
 
 def get_stock_list():
-  request = StockLatestQuoteRequest(
+  request = StockSnapshotRequest(
     symbol_or_symbols=TICKERS,
     feed="iex"
   )
-  quotes = client.get_stock_latest_quote(request)
+  snapshots = client.get_stock_snapshot(request)
 
-  quote_list = []
+  snapshot_list = []
 
-  for quote in quotes:
-    calculated_price = round((quotes[quote].ask_price + quotes[quote].bid_price) / 2, 2)
-    quote_list.append({
-      "ticker": quote,
-      "price": calculated_price,
-      "timestamp": quotes[quote].timestamp
+  for snapshot in snapshots:
+    #calculated_price = round((snapshots[snapshot].ask_price + snapshots[snapshot].bid_price) / 2, 2)
+    change = round(snapshots[snapshot].latest_trade.price - snapshots[snapshot].daily_bar.open, 2)
+    change_percentage = round((change / snapshots[snapshot].daily_bar.open) * 100, 2)
+    snapshot_list.append({
+      "ticker": snapshot,
+      "price": snapshots[snapshot].latest_trade.price,
+      "timestamp": snapshots[snapshot].latest_trade.timestamp,
+      "open_price": round(snapshots[snapshot].daily_bar.open, 2),
+      "change": change,
+      "change_percentage": change_percentage,
+      "volume": snapshots[snapshot].daily_bar.volume
     })
-  return quote_list
+  return snapshot_list
