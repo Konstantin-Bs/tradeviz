@@ -7,3 +7,11 @@ export interface Snapshot {
   change_percentage: number;
   volume: number;
 }
+
+export interface Bar {
+  time: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+}
