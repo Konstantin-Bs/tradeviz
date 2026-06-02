@@ -2,6 +2,9 @@ import os
 from dotenv import load_dotenv
 from alpaca.data.historical import StockHistoricalDataClient
 from alpaca.data.requests import StockSnapshotRequest
+from alpaca.data.requests import StockBarsRequest
+from alpaca.data.timeframe import TimeFrame
+from datetime import datetime, timedelta
 
 load_dotenv()
 
@@ -35,3 +38,25 @@ def get_stock_list():
       "volume": snapshots[snapshot].daily_bar.volume
     })
   return snapshot_list
+
+def get_stock_bars(ticker: str, period:str):
+  request = StockBarsRequest(
+    symbol_or_symbols=ticker,
+    timeframe=TimeFrame.Day,
+    start=datetime.now() - timedelta(days=30),
+    end=datetime.now(),
+    feed="iex"
+  )
+  bars = client.get_stock_bars(request)
+
+  bars_list = []
+
+  for bar in bars.data[ticker]:
+    bars_list.append({
+      "time": bar.timestamp.strftime("%Y-%m-%d"),
+      "open": bar.open,
+      "high": bar.high,
+      "low": bar.low,
+      "close": bar.close
+    })
+  return bars_list
