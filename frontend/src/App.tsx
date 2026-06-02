@@ -1,22 +1,14 @@
-import { useState, useEffect } from "react";
-import { getStocks } from "./services/api";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import StockDetail from "./pages/StockDetail";
 
-export default function () {
-  const [stocks, setStocks] = useState<string[]>([]);
-
-  useEffect(() => {
-    async function fetchStocks() {
-      const data = await getStocks();
-      setStocks(data);
-    }
-    fetchStocks();
-  }, []);
-
+export default function App() {
   return (
-    <div>
-      {stocks.map((ticker) => (
-        <p key={ticker}>{ticker}</p>
-      ))}
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/stock/:ticker" element={<StockDetail />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
