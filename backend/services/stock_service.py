@@ -26,16 +26,12 @@ def get_stock_list():
   snapshot_list = []
 
   for snapshot in snapshots:
-    #calculated_price = round((snapshots[snapshot].ask_price + snapshots[snapshot].bid_price) / 2, 2)
-    change = round(snapshots[snapshot].latest_trade.price - snapshots[snapshot].daily_bar.open, 2)
-    change_percentage = round((change / snapshots[snapshot].daily_bar.open) * 100, 2)
     snapshot_list.append({
       "ticker": snapshot,
       "price": snapshots[snapshot].latest_trade.price,
       "timestamp": snapshots[snapshot].latest_trade.timestamp,
       "open_price": round(snapshots[snapshot].daily_bar.open, 2),
-      "change": change,
-      "change_percentage": change_percentage,
+      "prev_close": round(snapshots[snapshot].previous_daily_bar.close, 2),
       "volume": snapshots[snapshot].daily_bar.volume
     })
   return snapshot_list

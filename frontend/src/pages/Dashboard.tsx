@@ -19,21 +19,31 @@ export default function Dashboard() {
 
   return (
     <div>
-      {stock.map((stocks) => (
-        <div
-          key={stocks.ticker}
-          className="flex flex-row gap-2 border rounded-md"
-          onClick={() => navigate(`/stock/${stocks.ticker}`)}
-        >
-          <p>{stocks.ticker}</p>
-          <p>{prices[stocks.ticker] ?? stocks.price}</p>
-          <p>{stocks.timestamp}</p>
-          <p>{stocks.open_price}</p>
-          <p>{stocks.change}</p>
-          <p>{stocks.change_percentage}</p>
-          <p>{stocks.volume}</p>
-        </div>
-      ))}
+      {stock.map((stocks) => {
+        const livePrice = prices[stocks.ticker] ?? stocks.price;
+        const liveChange = parseFloat(
+          (livePrice - stocks.prev_close).toFixed(2),
+        );
+        const liveChangePercent = parseFloat(
+          ((liveChange / stocks.prev_close) * 100).toFixed(2),
+        );
+
+        return (
+          <div
+            key={stocks.ticker}
+            className="flex flex-row gap-2 border rounded-md"
+            onClick={() => navigate(`/stock/${stocks.ticker}`)}
+          >
+            <p>{stocks.ticker}</p>
+            <p>{livePrice}</p>
+            <p>{stocks.timestamp}</p>
+            <p>{stocks.open_price}</p>
+            <p>{liveChange}</p>
+            <p>{liveChangePercent}</p>
+            <p>{stocks.volume}</p>
+          </div>
+        );
+      })}
     </div>
   );
 }
