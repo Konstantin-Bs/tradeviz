@@ -5,6 +5,7 @@ from alpaca.data.requests import StockSnapshotRequest
 from alpaca.data.requests import StockBarsRequest
 from alpaca.data.timeframe import TimeFrame
 from datetime import datetime, timedelta
+import pandas as pd
 
 load_dotenv()
 
@@ -43,7 +44,7 @@ def get_stock_bars(ticker: str, period:str):
   request = StockBarsRequest(
     symbol_or_symbols=ticker,
     timeframe=TimeFrame.Day,
-    start=datetime.now() - timedelta(days=30),
+    start=datetime.now() - timedelta(days=300),
     end=datetime.now(),
     feed="iex"
   )
@@ -59,4 +60,13 @@ def get_stock_bars(ticker: str, period:str):
       "low": bar.low,
       "close": bar.close
     })
+
+  moving_average = pd.Series([bar["close"] for bar in bars_list]).rolling(20).mean()
+
+  for i, value in enumerate(moving_average):
+    if pd.isna(value):
+      bars_list[i]["ma"] = None
+    else:
+      bars_list[i]["ma"] = round(value, 2)
+
   return bars_list

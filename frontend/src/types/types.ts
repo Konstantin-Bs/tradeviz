@@ -14,4 +14,5 @@ export interface Bar {
   high: number;
   low: number;
   close: number;
+  ma: number | null;
 }

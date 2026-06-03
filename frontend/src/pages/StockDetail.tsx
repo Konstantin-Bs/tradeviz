@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import type { Bar } from "../types/types";
 import { getBars } from "../services/api";
-import { CandlestickSeries, createChart } from "lightweight-charts";
+import { CandlestickSeries, createChart, LineSeries } from "lightweight-charts";
 
 export default function StockDetail() {
   const [bars, setBars] = useState<Bar[]>([]);
@@ -23,6 +23,11 @@ export default function StockDetail() {
     const chart = createChart(chartRef.current);
     const candlestickSeries = chart.addSeries(CandlestickSeries);
     candlestickSeries.setData(bars);
+    const lineSeries = chart.addSeries(LineSeries);
+    const lsdata = bars
+      .filter((bar) => bar.ma !== null)
+      .map((bar) => ({ time: bar.time, value: bar.ma }));
+    lineSeries.setData(lsdata);
     chart.timeScale().fitContent();
     return () => chart.remove();
   }, [bars]);
