@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { getStocks } from "../services/api";
 import type { Snapshot } from "../types/types";
 import { useNavigate } from "react-router-dom";
+import useWebSocket from "../hooks/useWebSocket";
 
 export default function Dashboard() {
   const [stock, setStock] = useState<Snapshot[]>([]);
   const navigate = useNavigate();
+  const prices = useWebSocket();
 
   useEffect(() => {
     async function fetchStocks() {
@@ -24,7 +26,7 @@ export default function Dashboard() {
           onClick={() => navigate(`/stock/${stocks.ticker}`)}
         >
           <p>{stocks.ticker}</p>
-          <p>{stocks.price}</p>
+          <p>{prices[stocks.ticker] ?? stocks.price}</p>
           <p>{stocks.timestamp}</p>
           <p>{stocks.open_price}</p>
           <p>{stocks.change}</p>
