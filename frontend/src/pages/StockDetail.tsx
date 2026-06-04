@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import type { BarsResponse, Snapshot } from "../types/types";
 import { getBars } from "../services/api";
@@ -14,12 +14,19 @@ export default function StockDetail({
 }: {
   prices: Record<string, number>;
 }) {
-  const [bars, setBars] = useState<BarsResponse | null>();
+  const [bars, setBars] = useState<BarsResponse | null>(null);
   const { ticker } = useParams();
   const chartRef = useRef<HTMLDivElement | null>(null);
+  const candlestickSeriesRef = useRef<any>(null);
+  const currentCandleRef = useRef<any>(null);
   const location = useLocation();
   const snapshot = location.state as Snapshot;
-  const [period, setPeriod] = useState("1M");
+  const [period, setPeriod] = useState("1Y");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!snapshot) navigate("/");
+  }, [snapshot]);
 
   useEffect(() => {
     async function fetchBars() {
@@ -35,6 +42,8 @@ export default function StockDetail({
     const chart = createChart(chartRef.current);
     const candlestickSeries = chart.addSeries(CandlestickSeries);
     candlestickSeries.setData(bars.bars);
+    currentCandleRef.current = bars.bars[bars.bars.length - 1];
+    candlestickSeriesRef.current = candlestickSeries;
 
     const lineSeries = chart.addSeries(LineSeries);
     const lsdata = bars.bars
@@ -62,6 +71,32 @@ export default function StockDetail({
     chart.timeScale().fitContent();
     return () => chart.remove();
   }, [bars]);
+
+  useEffect(() => {
+    if (
+      period === "1D" &&
+      candlestickSeriesRef.current &&
+      ticker &&
+      prices[ticker]
+    ) {
+      const newHigh = Math.max(currentCandleRef.current.high, prices[ticker]);
+      const newLow = Math.min(currentCandleRef.current.low, prices[ticker]);
+
+      candlestickSeriesRef.current.update({
+        time: Math.floor(Date.now() / 1000),
+        open: currentCandleRef.current.open,
+        high: newHigh,
+        low: newLow,
+        close: prices[ticker],
+      });
+      currentCandleRef.current = {
+        ...currentCandleRef.current,
+        high: newHigh,
+        low: newLow,
+        close: prices[ticker],
+      };
+    }
+  }, [prices]);
 
   const livePrice = prices[snapshot.ticker] ?? snapshot.price;
   const liveChange = parseFloat((livePrice - snapshot.prev_close).toFixed(2));

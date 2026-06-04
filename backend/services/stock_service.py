@@ -74,10 +74,8 @@ def get_stock_bars(ticker: str, period:str):
     else:
       bars_list[i]["ma"] = round(value, 2)
 
-  close_prices = [bar["close"] for bar in bars_list]
-
   return {
     "bars": bars_list,
-    "week52_high": max(close_prices),
-    "week52_low": min(close_prices)
+    "week52_high": max(bar["high"] for bar in bars_list),
+    "week52_low": min(bar["low"] for bar in bars_list)
   }
