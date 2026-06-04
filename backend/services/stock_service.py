@@ -28,8 +28,6 @@ def get_stock_list():
     snapshot_list.append({
       "ticker": snapshot,
       "price": snapshots[snapshot].latest_trade.price,
-      "timestamp": snapshots[snapshot].latest_trade.timestamp,
-      "open_price": round(snapshots[snapshot].daily_bar.open, 2),
       "prev_close": round(snapshots[snapshot].previous_daily_bar.close, 2),
       "volume": snapshots[snapshot].daily_bar.volume,
       "company_name": COMPANY_NAMES[snapshot]
@@ -54,7 +52,8 @@ def get_stock_bars(ticker: str, period:str):
       "open": bar.open,
       "high": bar.high,
       "low": bar.low,
-      "close": bar.close
+      "close": bar.close,
+      "volume": bar.volume
     })
 
   moving_average = pd.Series([bar["close"] for bar in bars_list]).rolling(20).mean()

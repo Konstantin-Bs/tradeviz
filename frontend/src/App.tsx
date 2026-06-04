@@ -10,7 +10,10 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Dashboard prices={prices} />} />
-        <Route path="/stock/:ticker" element={<StockDetail />} />
+        <Route
+          path="/stock/:ticker"
+          element={<StockDetail prices={prices} />}
+        />
       </Routes>
     </BrowserRouter>
   );

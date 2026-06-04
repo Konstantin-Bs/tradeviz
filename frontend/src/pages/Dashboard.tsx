@@ -34,13 +34,13 @@ export default function Dashboard({
           <div
             key={stocks.ticker}
             className="flex flex-row gap-2 border rounded-md"
-            onClick={() => navigate(`/stock/${stocks.ticker}`)}
+            onClick={() =>
+              navigate(`/stock/${stocks.ticker}`, { state: stocks })
+            }
           >
             <p>{stocks.ticker}</p>
             <p>{stocks.company_name}</p>
             <p>{livePrice}</p>
-            <p>{stocks.timestamp}</p>
-            <p>{stocks.open_price}</p>
             <p>{liveChange}</p>
             <p>{liveChangePercent}</p>
             <p>{stocks.volume}</p>

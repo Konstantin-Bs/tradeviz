@@ -1,8 +1,6 @@
 export interface Snapshot {
   ticker: string;
   price: number;
-  timestamp: string;
-  open_price: number;
   prev_close: number;
   volume: number;
   company_name: string;
@@ -20,5 +18,6 @@ export interface Bar {
   high: number;
   low: number;
   close: number;
+  volume: number;
   ma: number | null;
 }
