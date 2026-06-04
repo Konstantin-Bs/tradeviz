@@ -7,6 +7,12 @@ export interface Snapshot {
   volume: number;
 }
 
+export interface BarsResponse {
+  bars: Bar[];
+  week52_high: number;
+  week52_low: number;
+}
+
 export interface Bar {
   time: string;
   open: number;

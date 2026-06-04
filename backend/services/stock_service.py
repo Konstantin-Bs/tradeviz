@@ -40,7 +40,7 @@ def get_stock_bars(ticker: str, period:str):
   request = StockBarsRequest(
     symbol_or_symbols=ticker,
     timeframe=TimeFrame.Day,
-    start=datetime.now() - timedelta(days=300),
+    start=datetime.now() - timedelta(days=365),
     end=datetime.now(),
     feed="iex"
   )
@@ -65,4 +65,10 @@ def get_stock_bars(ticker: str, period:str):
     else:
       bars_list[i]["ma"] = round(value, 2)
 
-  return bars_list
+  close_prices = [bar["close"] for bar in bars_list]
+
+  return {
+    "bars": bars_list,
+    "week52_high": max(close_prices),
+    "week52_low": min(close_prices)
+  }

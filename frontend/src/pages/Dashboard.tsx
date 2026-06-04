@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { getStocks } from "../services/api";
 import type { Snapshot } from "../types/types";
 import { useNavigate } from "react-router-dom";
-import useWebSocket from "../hooks/useWebSocket";
 
-export default function Dashboard() {
+export default function Dashboard({
+  prices,
+}: {
+  prices: Record<string, number>;
+}) {
   const [stock, setStock] = useState<Snapshot[]>([]);
   const navigate = useNavigate();
-  const prices = useWebSocket();
 
   useEffect(() => {
     async function fetchStocks() {
