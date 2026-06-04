@@ -10,6 +10,7 @@ export default function Dashboard({
 }) {
   const [stock, setStock] = useState<Snapshot[]>([]);
   const navigate = useNavigate();
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     async function fetchStocks() {
@@ -21,32 +22,47 @@ export default function Dashboard({
 
   return (
     <div>
-      {stock.map((stocks) => {
-        const livePrice = prices[stocks.ticker] ?? stocks.price;
-        const liveChange = parseFloat(
-          (livePrice - stocks.prev_close).toFixed(2),
-        );
-        const liveChangePercent = parseFloat(
-          ((liveChange / stocks.prev_close) * 100).toFixed(2),
-        );
+      <div>
+        <input
+          type="text"
+          placeholder="Search"
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </div>
+      <div>
+        {stock
+          .filter(
+            (s) =>
+              s.ticker.includes(query.toUpperCase()) ||
+              s.company_name.toLowerCase().includes(query.toLowerCase()),
+          )
+          .map((stocks) => {
+            const livePrice = prices[stocks.ticker] ?? stocks.price;
+            const liveChange = parseFloat(
+              (livePrice - stocks.prev_close).toFixed(2),
+            );
+            const liveChangePercent = parseFloat(
+              ((liveChange / stocks.prev_close) * 100).toFixed(2),
+            );
 
-        return (
-          <div
-            key={stocks.ticker}
-            className="flex flex-row gap-2 border rounded-md"
-            onClick={() =>
-              navigate(`/stock/${stocks.ticker}`, { state: stocks })
-            }
-          >
-            <p>{stocks.ticker}</p>
-            <p>{stocks.company_name}</p>
-            <p>{livePrice}</p>
-            <p>{liveChange}</p>
-            <p>{liveChangePercent}</p>
-            <p>{stocks.volume}</p>
-          </div>
-        );
-      })}
+            return (
+              <div
+                key={stocks.ticker}
+                className="flex flex-row gap-2 border rounded-md"
+                onClick={() =>
+                  navigate(`/stock/${stocks.ticker}`, { state: stocks })
+                }
+              >
+                <p>{stocks.ticker}</p>
+                <p>{stocks.company_name}</p>
+                <p>{livePrice}</p>
+                <p>{liveChange}</p>
+                <p>{liveChangePercent}</p>
+                <p>{stocks.volume}</p>
+              </div>
+            );
+          })}
+      </div>
     </div>
   );
 }

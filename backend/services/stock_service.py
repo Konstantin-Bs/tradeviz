@@ -32,7 +32,7 @@ def get_stock_list():
       "volume": snapshots[snapshot].daily_bar.volume,
       "company_name": COMPANY_NAMES[snapshot]
     })
-  return snapshot_list
+  return sorted(snapshot_list, key=lambda x: x["ticker"])
 
 def get_stock_bars(ticker: str, period:str):
   perioddict = {
