@@ -19,15 +19,16 @@ export default function StockDetail({
   const chartRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
   const snapshot = location.state as Snapshot;
+  const [period, setPeriod] = useState("1M");
 
   useEffect(() => {
     async function fetchBars() {
       if (!ticker) return;
-      const data = await getBars(ticker);
+      const data = await getBars(ticker, period);
       setBars(data);
     }
     fetchBars();
-  }, [ticker]);
+  }, [ticker, period]);
 
   useEffect(() => {
     if (!chartRef.current || !bars) return;
@@ -70,13 +71,23 @@ export default function StockDetail({
 
   return (
     <div>
-      <h1>
-        {snapshot.ticker} {snapshot.company_name}
-      </h1>
       <div>
-        <p>Current Price: {livePrice}</p>
-        <p>Change: {liveChange}</p>
-        <p>Change %: {liveChangePercent}</p>
+        <h1>
+          {snapshot.ticker} {snapshot.company_name}
+        </h1>
+        <div>
+          <p>Current Price: {livePrice}</p>
+          <p>Change: {liveChange}</p>
+          <p>Change %: {liveChangePercent}</p>
+        </div>
+      </div>
+      <div>
+        <button onClick={() => setPeriod("1D")}>1D</button>
+        <button onClick={() => setPeriod("1W")}>1W</button>
+        <button onClick={() => setPeriod("1M")}>1M</button>
+        <button onClick={() => setPeriod("3M")}>3M</button>
+        <button onClick={() => setPeriod("1Y")}>1Y</button>
+        <button onClick={() => setPeriod("5Y")}>5Y</button>
       </div>
       <div className="h-140" ref={chartRef} />
       <div>

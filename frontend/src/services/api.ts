@@ -5,7 +5,12 @@ export async function getStocks(): Promise<Snapshot[]> {
   return data.json();
 }
 
-export async function getBars(ticker: string): Promise<BarsResponse> {
-  const data = await fetch(import.meta.env.VITE_API_URL + `/bars/${ticker}`);
+export async function getBars(
+  ticker: string,
+  period: string,
+): Promise<BarsResponse> {
+  const data = await fetch(
+    import.meta.env.VITE_API_URL + `/bars/${ticker}?period=${period}`,
+  );
   return data.json();
 }

@@ -35,10 +35,20 @@ def get_stock_list():
   return snapshot_list
 
 def get_stock_bars(ticker: str, period:str):
+  perioddict = {
+    "1D": (TimeFrame.Minute, timedelta(days=1)),
+    "1W": (TimeFrame.Hour, timedelta(days=7)),
+    "1M": (TimeFrame.Day, timedelta(days=30)),
+    "3M": (TimeFrame.Day, timedelta(days=90)),
+    "1Y": (TimeFrame.Day, timedelta(days=365)),
+    "5Y": (TimeFrame.Week, timedelta(days=1825))
+  }
+  timeframe, delta = perioddict[period]
+
   request = StockBarsRequest(
     symbol_or_symbols=ticker,
-    timeframe=TimeFrame.Day,
-    start=datetime.now() - timedelta(days=365),
+    timeframe=timeframe,
+    start=datetime.now() - delta,
     end=datetime.now(),
     feed="iex"
   )
@@ -48,7 +58,7 @@ def get_stock_bars(ticker: str, period:str):
 
   for bar in bars.data[ticker]:
     bars_list.append({
-      "time": bar.timestamp.strftime("%Y-%m-%d"),
+      "time": int(bar.timestamp.timestamp()),
       "open": bar.open,
       "high": bar.high,
       "low": bar.low,

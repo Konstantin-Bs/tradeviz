@@ -10,6 +10,6 @@ def get_stocks():
   return stock_list
 
 @router.get("/bars/{ticker}")
-def get_bars(ticker: str):
-  bars_list = get_stock_bars(ticker, "1M")
+def get_bars(ticker: str, period: str = "1M"):
+  bars_list = get_stock_bars(ticker, period)
   return bars_list
