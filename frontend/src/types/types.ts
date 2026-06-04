@@ -5,6 +5,7 @@ export interface Snapshot {
   open_price: number;
   prev_close: number;
   volume: number;
+  company_name: string;
 }
 
 export interface BarsResponse {

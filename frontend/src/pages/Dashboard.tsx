@@ -37,6 +37,7 @@ export default function Dashboard({
             onClick={() => navigate(`/stock/${stocks.ticker}`)}
           >
             <p>{stocks.ticker}</p>
+            <p>{stocks.company_name}</p>
             <p>{livePrice}</p>
             <p>{stocks.timestamp}</p>
             <p>{stocks.open_price}</p>

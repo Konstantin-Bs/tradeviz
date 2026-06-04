@@ -1,0 +1,41 @@
+TICKERS = [
+  "AAPL", "MSFT", "NVDA", "AMZN", "GOOGL",
+  "META", "TSLA", "NFLX", "AMD", "INTC",
+  "CRM", "ORCL", "CSCO", "ADBE", "JPM",
+  "BAC", "V", "MA", "GS", "DIS",
+  "NKE", "KO", "PEP", "WMT", "COST",
+  "XOM", "JNJ", "PG", "UNH", "MU"
+]
+
+COMPANY_NAMES = {
+    "AAPL": "Apple Inc.",
+    "MSFT": "Microsoft Corp.",
+    "NVDA": "NVIDIA Corp.",
+    "AMZN": "Amazon.com Inc.",
+    "GOOGL": "Alphabet Inc.",
+    "META": "Meta Platforms Inc.",
+    "TSLA": "Tesla Inc.",
+    "NFLX": "Netflix Inc.",
+    "AMD": "Advanced Micro Devices",
+    "INTC": "Intel Corp.",
+    "CRM": "Salesforce Inc.",
+    "ORCL": "Oracle Corp.",
+    "CSCO": "Cisco Systems Inc.",
+    "ADBE": "Adobe Inc.",
+    "JPM": "JPMorgan Chase & Co.",
+    "BAC": "Bank of America Corp.",
+    "V": "Visa Inc.",
+    "MA": "Mastercard Inc.",
+    "GS": "Goldman Sachs Group",
+    "DIS": "Walt Disney Co.",
+    "NKE": "Nike Inc.",
+    "KO": "Coca-Cola Co.",
+    "PEP": "PepsiCo Inc.",
+    "WMT": "Walmart Inc.",
+    "COST": "Costco Wholesale Corp.",
+    "XOM": "ExxonMobil Corp.",
+    "JNJ": "Johnson & Johnson",
+    "PG": "Procter & Gamble Co.",
+    "UNH": "UnitedHealth Group Inc.",
+    "MU": "Micron Technology Inc."
+}

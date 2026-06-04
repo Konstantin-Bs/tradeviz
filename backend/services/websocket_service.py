@@ -3,13 +3,12 @@ from dotenv import load_dotenv
 import os
 import json
 from fastapi import WebSocket
+from models.constants import TICKERS
 
 load_dotenv()
 
 KEY_ID = os.getenv("ALPACA_API_KEY")
 SECRET = os.getenv("ALPACA_SECRET_KEY")
-
-TICKERS = ["AAPL", "TSLA", "MSFT", "GOOGL", "AMZN"]
 
 ws_url = "wss://stream.data.alpaca.markets/v2/iex"
 

@@ -6,6 +6,7 @@ from alpaca.data.requests import StockBarsRequest
 from alpaca.data.timeframe import TimeFrame
 from datetime import datetime, timedelta
 import pandas as pd
+from models.constants import TICKERS, COMPANY_NAMES
 
 load_dotenv()
 
@@ -13,8 +14,6 @@ client = StockHistoricalDataClient(
   api_key=os.getenv("ALPACA_API_KEY"),
   secret_key=os.getenv("ALPACA_SECRET_KEY")
 )
-
-TICKERS = ["AAPL", "TSLA", "MSFT", "GOOGL", "AMZN"]
 
 def get_stock_list():
   request = StockSnapshotRequest(
@@ -32,7 +31,8 @@ def get_stock_list():
       "timestamp": snapshots[snapshot].latest_trade.timestamp,
       "open_price": round(snapshots[snapshot].daily_bar.open, 2),
       "prev_close": round(snapshots[snapshot].previous_daily_bar.close, 2),
-      "volume": snapshots[snapshot].daily_bar.volume
+      "volume": snapshots[snapshot].daily_bar.volume,
+      "company_name": COMPANY_NAMES[snapshot]
     })
   return snapshot_list
 
