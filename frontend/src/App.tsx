@@ -3,6 +3,7 @@ import Dashboard from "./pages/Dashboard";
 import StockDetail from "./pages/StockDetail";
 import useWebSocket from "./hooks/useWebSocket";
 import ErrorBoundary from "./components/ErrorBoundary";
+import Navbar from "./components/Navbar";
 
 export default function App() {
   const prices = useWebSocket();
@@ -10,6 +11,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ErrorBoundary fallback={<p>Something went wrong.</p>}>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Dashboard prices={prices} />} />
           <Route
