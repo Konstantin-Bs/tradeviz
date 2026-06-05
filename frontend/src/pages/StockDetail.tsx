@@ -81,9 +81,11 @@ export default function StockDetail({
     ) {
       const newHigh = Math.max(currentCandleRef.current.high, prices[ticker]);
       const newLow = Math.min(currentCandleRef.current.low, prices[ticker]);
+      const now = Math.floor(Date.now() / 1000);
+      const minuteTimestamp = now - (now % 60);
 
       candlestickSeriesRef.current.update({
-        time: Math.floor(Date.now() / 1000),
+        time: minuteTimestamp,
         open: currentCandleRef.current.open,
         high: newHigh,
         low: newLow,
