@@ -30,6 +30,13 @@ export default function StockDetail({
   }, [snapshot]);
 
   useEffect(() => {
+    document.title = `${ticker} - tradeviz`;
+    return () => {
+      document.title = "tradeviz";
+    };
+  }, [ticker]);
+
+  useEffect(() => {
     async function fetchBars() {
       if (!ticker) return;
       try {

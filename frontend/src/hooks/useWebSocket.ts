@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 export default function useWebSocket() {
   const [price, setPrice] = useState<Record<string, number>>({});
   const [retryCount, setRetryCount] = useState(0);
-  const url = "ws://localhost:8000/ws";
+  const url = import.meta.env.VITE_WS_URL;
 
   useEffect(() => {
     const ws = new WebSocket(url);
