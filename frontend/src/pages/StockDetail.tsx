@@ -23,6 +23,7 @@ export default function StockDetail({
   const snapshot = location.state as Snapshot;
   const [period, setPeriod] = useState("1Y");
   const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!snapshot) navigate("/");
@@ -31,8 +32,12 @@ export default function StockDetail({
   useEffect(() => {
     async function fetchBars() {
       if (!ticker) return;
-      const data = await getBars(ticker, period);
-      setBars(data);
+      try {
+        const data = await getBars(ticker, period);
+        setBars(data);
+      } catch (err) {
+        setError("Failed to load stocks");
+      }
     }
     fetchBars();
   }, [ticker, period]);
@@ -105,6 +110,8 @@ export default function StockDetail({
   const liveChangePercent = parseFloat(
     ((liveChange / snapshot.prev_close) * 100).toFixed(2),
   );
+
+  if (error) return <p>{error}</p>;
 
   return (
     <div>

@@ -11,14 +11,21 @@ export default function Dashboard({
   const [stock, setStock] = useState<Snapshot[]>([]);
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchStocks() {
-      const data = await getStocks();
-      setStock(data);
+      try {
+        const data = await getStocks();
+        setStock(data);
+      } catch (err) {
+        setError("Failed to load stocks");
+      }
     }
     fetchStocks();
   }, []);
+
+  if (error) return <p>{error}</p>;
 
   return (
     <div>

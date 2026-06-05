@@ -7,6 +7,8 @@ from alpaca.data.timeframe import TimeFrame
 from datetime import datetime, timedelta
 import pandas as pd
 from models.constants import TICKERS, COMPANY_NAMES
+from fastapi import HTTPException
+from alpaca.common.exceptions import APIError
 
 load_dotenv()
 
@@ -16,66 +18,72 @@ client = StockHistoricalDataClient(
 )
 
 def get_stock_list():
-  request = StockSnapshotRequest(
-    symbol_or_symbols=TICKERS,
-    feed="iex"
-  )
-  snapshots = client.get_stock_snapshot(request)
+  try:
+    request = StockSnapshotRequest(
+      symbol_or_symbols=TICKERS,
+      feed="iex"
+    )
+    snapshots = client.get_stock_snapshot(request)
 
-  snapshot_list = []
+    snapshot_list = []
 
-  for snapshot in snapshots:
-    snapshot_list.append({
-      "ticker": snapshot,
-      "price": snapshots[snapshot].latest_trade.price,
-      "prev_close": round(snapshots[snapshot].previous_daily_bar.close, 2),
-      "volume": snapshots[snapshot].daily_bar.volume,
-      "company_name": COMPANY_NAMES[snapshot]
-    })
-  return sorted(snapshot_list, key=lambda x: x["ticker"])
+    for snapshot in snapshots:
+      snapshot_list.append({
+        "ticker": snapshot,
+        "price": snapshots[snapshot].latest_trade.price,
+        "prev_close": round(snapshots[snapshot].previous_daily_bar.close, 2),
+        "volume": snapshots[snapshot].daily_bar.volume,
+        "company_name": COMPANY_NAMES[snapshot]
+      })
+    return sorted(snapshot_list, key=lambda x: x["ticker"])
+  except APIError as e:
+    raise HTTPException(status_code=503, detail=f"Alpaca error: {str(e)}")
 
 def get_stock_bars(ticker: str, period:str):
-  perioddict = {
-    "1D": (TimeFrame.Minute, timedelta(days=1)),
-    "1W": (TimeFrame.Hour, timedelta(days=7)),
-    "1M": (TimeFrame.Day, timedelta(days=30)),
-    "3M": (TimeFrame.Day, timedelta(days=90)),
-    "1Y": (TimeFrame.Day, timedelta(days=365)),
-    "5Y": (TimeFrame.Week, timedelta(days=1825))
-  }
-  timeframe, delta = perioddict[period]
+  try:
+    perioddict = {
+      "1D": (TimeFrame.Minute, timedelta(days=1)),
+      "1W": (TimeFrame.Hour, timedelta(days=7)),
+      "1M": (TimeFrame.Day, timedelta(days=30)),
+      "3M": (TimeFrame.Day, timedelta(days=90)),
+      "1Y": (TimeFrame.Day, timedelta(days=365)),
+      "5Y": (TimeFrame.Week, timedelta(days=1825))
+    }
+    timeframe, delta = perioddict[period]
 
-  request = StockBarsRequest(
-    symbol_or_symbols=ticker,
-    timeframe=timeframe,
-    start=datetime.now() - delta,
-    end=datetime.now(),
-    feed="iex"
-  )
-  bars = client.get_stock_bars(request)
+    request = StockBarsRequest(
+      symbol_or_symbols=ticker,
+      timeframe=timeframe,
+      start=datetime.now() - delta,
+      end=datetime.now(),
+      feed="iex"
+    )
+    bars = client.get_stock_bars(request)
 
-  bars_list = []
+    bars_list = []
 
-  for bar in bars.data[ticker]:
-    bars_list.append({
-      "time": int(bar.timestamp.timestamp()),
-      "open": bar.open,
-      "high": bar.high,
-      "low": bar.low,
-      "close": bar.close,
-      "volume": bar.volume
-    })
+    for bar in bars.data[ticker]:
+      bars_list.append({
+        "time": int(bar.timestamp.timestamp()),
+        "open": bar.open,
+        "high": bar.high,
+        "low": bar.low,
+        "close": bar.close,
+        "volume": bar.volume
+      })
 
-  moving_average = pd.Series([bar["close"] for bar in bars_list]).rolling(20).mean()
+    moving_average = pd.Series([bar["close"] for bar in bars_list]).rolling(20).mean()
 
-  for i, value in enumerate(moving_average):
-    if pd.isna(value):
-      bars_list[i]["ma"] = None
-    else:
-      bars_list[i]["ma"] = round(value, 2)
+    for i, value in enumerate(moving_average):
+      if pd.isna(value):
+        bars_list[i]["ma"] = None
+      else:
+        bars_list[i]["ma"] = round(value, 2)
 
-  return {
-    "bars": bars_list,
-    "week52_high": max(bar["high"] for bar in bars_list),
-    "week52_low": min(bar["low"] for bar in bars_list)
-  }
+    return {
+      "bars": bars_list,
+      "week52_high": max(bar["high"] for bar in bars_list),
+      "week52_low": min(bar["low"] for bar in bars_list)
+    }
+  except APIError as e:
+    raise HTTPException(status_code=503, detail=f"Alpaca error: {str(e)}")

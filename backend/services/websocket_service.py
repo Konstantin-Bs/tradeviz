@@ -2,8 +2,8 @@ import websockets
 from dotenv import load_dotenv
 import os
 import json
-from fastapi import WebSocket
 from models.constants import TICKERS
+import asyncio
 
 load_dotenv()
 
@@ -26,13 +26,18 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 async def websocket_connect():
-  ws = await websockets.connect(ws_url)
-  welcome = await ws.recv()
-  print(welcome)
-  await ws.send(json.dumps({"action": "auth", "key": f"{KEY_ID}", "secret": f"{SECRET}"}))
-  auth = await ws.recv()
-  print(auth)
-  await ws.send(json.dumps({"action": "subscribe", "trades": TICKERS}))
-  async for message in ws:
-    await manager.broadcast(message)
-    print(message)
+  while True:
+    try:
+      ws = await websockets.connect(ws_url)
+      welcome = await ws.recv()
+      print(welcome)
+      await ws.send(json.dumps({"action": "auth", "key": f"{KEY_ID}", "secret": f"{SECRET}"}))
+      auth = await ws.recv()
+      print(auth)
+      await ws.send(json.dumps({"action": "subscribe", "trades": TICKERS}))
+      async for message in ws:
+        await manager.broadcast(message)
+        print(message)
+    except Exception as e:
+      print(f"WebSocket error, reconnectiong: {e}")
+      asyncio.sleep(5)
