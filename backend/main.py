@@ -2,8 +2,16 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import stocks
 from routers import websocket
+from services.websocket_service import websocket_connect
+from contextlib import asynccontextmanager
+import asyncio
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+  asyncio.create_task(websocket_connect())
+  yield
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
   CORSMiddleware,
