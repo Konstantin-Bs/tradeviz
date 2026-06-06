@@ -40,4 +40,4 @@ async def websocket_connect():
         print(message)
     except Exception as e:
       print(f"WebSocket error, reconnectiong: {e}")
-      asyncio.sleep(5)
+      await asyncio.sleep(5)

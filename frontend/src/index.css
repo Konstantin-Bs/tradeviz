@@ -3,3 +3,7 @@
 body {
   @apply bg-mist-900 text-gray-100 min-h-screen;
 }
+
+html {
+  overflow-y: scroll;
+}

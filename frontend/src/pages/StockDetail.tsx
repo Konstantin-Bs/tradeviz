@@ -121,7 +121,7 @@ export default function StockDetail({
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
+    <div className="mt-10">
       <div>
         <h1>
           {snapshot.ticker} {snapshot.company_name}
