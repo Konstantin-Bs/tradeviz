@@ -47,7 +47,9 @@ export default function Navbar() {
             <House size={20} />
           </button>
           <div className="flex items-center justify-center gap-2 w-full">
-            <div className="w-2 h-2 rounded-full bg-green-400" />
+            <div
+              className={`w-2 h-2 rounded-full ${isMarketOpen() ? "bg-green-400" : "bg-red-400"}`}
+            />
             <h1 className="font-bold">tradeviz</h1>
           </div>
         </div>

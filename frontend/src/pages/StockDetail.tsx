@@ -7,6 +7,8 @@ import {
   createChart,
   HistogramSeries,
   LineSeries,
+  CrosshairMode,
+  LineStyle,
 } from "lightweight-charts";
 
 export default function StockDetail({
@@ -51,7 +53,16 @@ export default function StockDetail({
 
   useEffect(() => {
     if (!chartRef.current || !bars) return;
-    const chart = createChart(chartRef.current);
+    const chart = createChart(chartRef.current, {
+      layout: {
+        background: { color: "#111827" },
+        textColor: "#9ca3af",
+      },
+      grid: {
+        vertLines: { color: "#1f2937" },
+        horzLines: { color: "#1f2937" },
+      },
+    });
     const candlestickSeries = chart.addSeries(CandlestickSeries);
     candlestickSeries.setData(bars.bars);
     currentCandleRef.current = bars.bars[bars.bars.length - 1];
@@ -80,8 +91,33 @@ export default function StockDetail({
       scaleMargins: { top: 0.8, bottom: 0 },
     });
 
+    chart.applyOptions({
+      crosshair: {
+        mode: CrosshairMode.Normal,
+        vertLine: {
+          width: 4,
+          color: "#C3BCDB44",
+          style: LineStyle.Solid,
+          labelBackgroundColor: "#9B7DFF",
+        },
+        horzLine: {
+          color: "#9B7DFF",
+          labelBackgroundColor: "#9B7DFF",
+        },
+      },
+    });
+
+    const handleResize = () => {
+      chart.applyOptions({ width: chartRef.current?.clientWidth });
+      chart.timeScale().fitContent();
+    };
+    window.addEventListener("resize", handleResize);
+
     chart.timeScale().fitContent();
-    return () => chart.remove();
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      chart.remove();
+    };
   }, [bars]);
 
   useEffect(() => {
