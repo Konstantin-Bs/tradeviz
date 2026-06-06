@@ -93,6 +93,11 @@ export default function Dashboard({
 
                 return (
                   <tr
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter")
+                        navigate(`/stock/${stocks.ticker}`, { state: stocks });
+                    }}
                     className="cursor-pointer hover:bg-mist-800"
                     key={stocks.ticker}
                     onClick={() =>

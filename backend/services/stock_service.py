@@ -60,6 +60,9 @@ def get_stock_bars(ticker: str, period:str):
     )
     bars = client.get_stock_bars(request)
 
+    if ticker not in bars.data or not bars.data[ticker]:
+      raise HTTPException(status_code=404, detail="No data available for this period")
+
     bars_list = []
 
     for bar in bars.data[ticker]:

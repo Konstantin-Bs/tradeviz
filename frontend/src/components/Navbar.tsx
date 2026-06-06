@@ -35,12 +35,14 @@ export default function Navbar() {
       ) : (
         <div className="flex items-center relative py-2">
           <button
+            aria-label="back button"
             className="absolute left-4 cursor-pointer"
             onClick={() => navigate(-1)}
           >
             <ArrowLeft size={20} />
           </button>
           <button
+            aria-label="home button"
             className="absolute left-14 cursor-pointer"
             onClick={() => navigate("/")}
           >

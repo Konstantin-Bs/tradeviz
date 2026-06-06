@@ -45,14 +45,18 @@ export default function StockDetail({
         const data = await getBars(ticker, period);
         setBars(data);
       } catch (err) {
-        setError("Failed to load stocks");
+        if (period === "1D") {
+          setError("No data available for today — market may be closed");
+        } else {
+          setError("Failed to load stocks");
+        }
       }
     }
     fetchBars();
   }, [ticker, period]);
 
   useEffect(() => {
-    if (!chartRef.current || !bars) return;
+    if (!chartRef.current || !bars || bars.bars.length === 0) return;
     const chart = createChart(chartRef.current, {
       layout: {
         background: { color: "#111827" },
@@ -148,41 +152,104 @@ export default function StockDetail({
     }
   }, [prices]);
 
+  function formatVolume(volume: number): string {
+    if (volume >= 1_000_000) return `${(volume / 1_000_000).toFixed(3)}M`;
+    if (volume >= 1_000) return `${(volume / 1_000).toFixed(3)}K`;
+    return volume.toString();
+  }
+
   const livePrice = prices[snapshot.ticker] ?? snapshot.price;
   const liveChange = parseFloat((livePrice - snapshot.prev_close).toFixed(2));
   const liveChangePercent = parseFloat(
     ((liveChange / snapshot.prev_close) * 100).toFixed(2),
   );
 
-  if (error) return <p>{error}</p>;
-
-  return (
-    <div className="mt-10">
-      <div>
-        <h1>
-          {snapshot.ticker} {snapshot.company_name}
-        </h1>
-        <div>
-          <p>Current Price: {livePrice}</p>
-          <p>Change: {liveChange}</p>
-          <p>Change %: {liveChangePercent}</p>
+  if (error)
+    return (
+      <div className="mt-20 flex flex-col items-center gap-4">
+        <p className="text-red-400">{error}</p>
+        <div className="flex flex-row gap-1 bg-gray-800 rounded-lg p-1">
+          {["1D", "1W", "1M", "3M", "1Y", "5Y"].map((p) => (
+            <button
+              key={p}
+              onClick={() => {
+                setPeriod(p);
+                setError(null);
+              }}
+              className="px-3 py-1 rounded-md text-sm font-medium cursor-pointer text-gray-400 hover:text-white"
+            >
+              {p}
+            </button>
+          ))}
         </div>
       </div>
-      <div>
-        <button onClick={() => setPeriod("1D")}>1D</button>
-        <button onClick={() => setPeriod("1W")}>1W</button>
-        <button onClick={() => setPeriod("1M")}>1M</button>
-        <button onClick={() => setPeriod("3M")}>3M</button>
-        <button onClick={() => setPeriod("1Y")}>1Y</button>
-        <button onClick={() => setPeriod("5Y")}>5Y</button>
+    );
+
+  return (
+    <div className="mt-15 flex flex-col">
+      <div className="flex flex-col items-center gap-2">
+        <h1 className="font-semibold text-5xl">
+          {snapshot.ticker} | {snapshot.company_name}
+        </h1>
+        <div className="flex flex-row items-center gap-4">
+          <p className="text-2xl font-bold">${livePrice}</p>
+          <p
+            className={`text-lg ${liveChange > 0 ? "text-green-400" : "text-red-400"}`}
+          >
+            {liveChange > 0 ? `+$${liveChange}` : `-$${Math.abs(liveChange)}`}
+          </p>
+          <p
+            className={`text-lg ${liveChangePercent > 0 ? "text-green-400" : "text-red-400"}`}
+          >
+            {liveChangePercent > 0
+              ? `+${liveChangePercent}%`
+              : `${liveChangePercent}%`}
+          </p>
+        </div>
       </div>
-      <div className="h-140" ref={chartRef} />
-      <div>
-        <p>Daily Open: {bars?.bars[bars.bars.length - 1].open}</p>
-        <p>Prev Close: {snapshot.prev_close}</p>
-        <p>52W High: {bars?.week52_high}</p>
-        <p>52W Low: {bars?.week52_low}</p>
-        <p>Volume: {snapshot.volume}</p>
+      <div className="flex flex-row gap-1 p-1 self-end">
+        {["1D", "1W", "1M", "3M", "1Y", "5Y"].map((p) => (
+          <button
+            key={p}
+            onClick={() => setPeriod(p)}
+            className={`px-3 py-1 rounded-md text-sm font-medium cursor-pointer transition-colors ${
+              period === p
+                ? "bg-gray-600 text-white"
+                : "text-gray-400 hover:text-white"
+            }`}
+          >
+            {p}
+          </button>
+        ))}
+      </div>
+      {bars ? (
+        <div className="h-140" ref={chartRef} />
+      ) : (
+        <div className="h-140 rounded-lg bg-gray-800 animate-pulse" />
+      )}
+      <div className="flex flex-row flex-wrap items-center justify-center gap-10 my-5">
+        <div className="border-r pr-10">
+          <p className="text-xs text-gray-400">Daily Open</p>
+          <p className="font-semibold">
+            ${bars?.bars[bars.bars.length - 1].open}
+          </p>
+        </div>
+        <div className="border-r pr-10">
+          <p className="text-xs text-gray-400">Prev Close:</p>
+          <p className="font-semibold">{snapshot.prev_close}</p>
+        </div>
+        <div className="border-r pr-10">
+          <p className="text-xs text-gray-400">52W High:</p>
+          <p className="font-semibold">{bars?.week52_high}</p>
+        </div>
+        <div className="border-r pr-10">
+          <p className="text-xs text-gray-400">52W Low:</p>
+          <p className="font-semibold">{bars?.week52_low}</p>
+        </div>
+        <div>
+          <p className="text-xs text-gray-400">Volume:</p>
+          <p className="font-semibold">{formatVolume(snapshot.volume)}</p>
+        </div>
       </div>
     </div>
   );

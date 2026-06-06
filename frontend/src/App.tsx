@@ -13,7 +13,11 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <ErrorBoundary fallback={<p>Something went wrong.</p>}>
+      <ErrorBoundary
+        fallback={
+          <h1 className="text-center mt-10 text-2xl">Something went wrong.</h1>
+        }
+      >
         <div className="min-h-screen flex flex-col">
           <Navbar />
           <main className="flex-1">
