@@ -82,10 +82,11 @@ export default function Datenschutzerklaerung() {
         <h2 className="text-xl font-semibold mb-3">Börsendaten</h2>
         <p>
           Die in der Anwendung angezeigten Aktienkurse und Marktdaten stammen
-          von Alpaca Markets und dienen ausschließlich zu Informationszwecken.
-          Die Daten werden in Echtzeit abgerufen und nicht dauerhaft
-          gespeichert. tradeviz ist kein lizenzierter Finanzberater. Die
-          angezeigten Informationen stellen keine Anlageberatung dar.
+          von Alpaca Markets über die IEX Exchange und dienen ausschließlich zu
+          Informationszwecken. Die Daten werden in Echtzeit abgerufen, nicht
+          dauerhaft gespeichert und können unvollständig sein. tradeviz ist kein
+          lizenzierter Finanzberater. Die angezeigten Informationen stellen
+          keine Anlageberatung dar.
         </p>
       </section>
 

@@ -227,6 +227,16 @@ export default function StockDetail({
       ) : (
         <div className="h-140 rounded-lg bg-gray-800 animate-pulse" />
       )}
+      <p className="text-xs text-gray-500 self-end p-1">
+        Powered by{" "}
+        <a
+          href="https://www.tradingview.com"
+          target="_blank"
+          className="underline"
+        >
+          TradingView
+        </a>
+      </p>
       <div className="flex flex-row flex-wrap items-center justify-center gap-10 my-5">
         <div className="border-r pr-10">
           <p className="text-xs text-gray-400">Daily Open</p>

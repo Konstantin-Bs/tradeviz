@@ -196,6 +196,12 @@ export default function Dashboard({
       {filteredStocks.length === 0 && query && (
         <p className="my-5">No results for "{query}"</p>
       )}
+      {filteredStocks.length !== 0 && (
+        <p className="text-xs text-gray-500 mt-2 text-center">
+          * Market data provided by Alpaca via IEX Exchange. Prices may not
+          reflect all market activity.
+        </p>
+      )}
     </div>
   );
 }
