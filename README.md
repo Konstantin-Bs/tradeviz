@@ -10,7 +10,7 @@ Real-time stock market dashboard. Track live prices, analyze candlestick charts 
 ![Vercel](https://img.shields.io/badge/Frontend-Vercel-black)
 ![Railway](https://img.shields.io/badge/Backend-Railway-7B00D4)
 
-**[Live Demo](https://tradeviz.vercel.app)**
+**[Live Demo](https://gettradeviz.vercel.app)**
 
 ---
 
