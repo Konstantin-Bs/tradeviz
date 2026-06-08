@@ -123,7 +123,7 @@ export default function Dashboard({
                       </td>
                     )}
                     {liveChangePercent > 0 ? (
-                      <td className="p-2 text-left border-b border-gray-600 text-green-400">
+                      <td className="hidden md:table-cell p-2 text-left border-b border-gray-600 text-green-400">
                         +{liveChangePercent}%
                       </td>
                     ) : (
