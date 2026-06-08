@@ -73,10 +73,10 @@ export default function Dashboard({
                 <th className="p-2 text-left border-b border-gray-600">
                   change
                 </th>
-                <th className="p-2 text-left border-b border-gray-600">
+                <th className="hidden md:table-cell p-2 text-left border-b border-gray-600">
                   Change %
                 </th>
-                <th className="p-2 text-left border-b border-gray-600">
+                <th className="hidden md:table-cell p-2 text-left border-b border-gray-600">
                   Volume
                 </th>
               </tr>
@@ -127,11 +127,11 @@ export default function Dashboard({
                         +{liveChangePercent}%
                       </td>
                     ) : (
-                      <td className="p-2 text-left border-b border-gray-600 text-red-400">
+                      <td className="hidden md:table-cell p-2 text-left border-b border-gray-600 text-red-400">
                         {liveChangePercent}%
                       </td>
                     )}
-                    <td className="p-2 text-left border-b border-gray-600">
+                    <td className="hidden md:table-cell p-2 text-left border-b border-gray-600">
                       {formatVolume(stocks.volume)}
                     </td>
                   </tr>
@@ -158,10 +158,10 @@ export default function Dashboard({
                 <th className="p-3 border-b border-gray-600">
                   <div className="h-4 w-16 bg-gray-700 rounded" />
                 </th>
-                <th className="p-3 border-b border-gray-600">
+                <th className="hidden md:table-cell p-3 border-b border-gray-600">
                   <div className="h-4 w-16 bg-gray-700 rounded" />
                 </th>
-                <th className="p-3 border-b border-gray-600">
+                <th className="hidden md:table-cell p-3 border-b border-gray-600">
                   <div className="h-4 w-16 bg-gray-700 rounded" />
                 </th>
               </tr>
@@ -181,10 +181,10 @@ export default function Dashboard({
                   <td className="p-3 border-b border-gray-600">
                     <div className="h-4 w-16 bg-gray-700 rounded" />
                   </td>
-                  <td className="p-3 border-b border-gray-600">
+                  <td className="hidden md:table-cell p-3 border-b border-gray-600">
                     <div className="h-4 w-16 bg-gray-700 rounded" />
                   </td>
-                  <td className="p-3 border-b border-gray-600">
+                  <td className="hidden md:table-cell p-3 border-b border-gray-600">
                     <div className="h-4 w-16 bg-gray-700 rounded" />
                   </td>
                 </tr>
